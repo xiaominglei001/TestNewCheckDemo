@@ -1,15 +1,14 @@
 package testnewcheck.com.testnewcheckdemo;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.amitshekhar.DebugDB;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -23,11 +22,12 @@ import java.util.List;
 public class CheckDbHelper {
 
 
-    private static SQLiteDatabase db;
-
+    private static SQLiteDatabase sqLiteDatabase;
+    private static Handler mhandler;
     //创建并写入以单号为名的数据库
-    public static void crateDb(Context context, CheckDataBean checkDataBean, String checkid) {
-        db = SQLiteDatabase.openOrCreateDatabase(Environment.getExternalStorageDirectory() + "/" + checkid + ".db", null);//没使用Android自带的helper创建,直接使用SQLiteDatabase创建数据库
+    public static void crateDb(Context context, CheckDataBean checkDataBean, String checkid, Handler tempmhandler) {
+        mhandler = tempmhandler;
+        sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Environment.getExternalStorageDirectory() + "/" + checkid + ".db", null);// 没使用Android自带的helper创建,直接使用SQLiteDatabase创建数据库
         setCustomDatabaseFiles(context, checkid + ".db", Environment.getExternalStorageDirectory() + "/" + checkid + ".db");
         createTable();
         fillData(checkDataBean);
@@ -146,16 +146,16 @@ public class CheckDbHelper {
                         ");";
 
         //执行SQL语句
-        db.execSQL("drop table if  exists checklist;");
-        db.execSQL("drop table if  exists parts;");
-        db.execSQL("drop table if  exists positions;");
-        db.execSQL("drop table if  exists projects;");
-        db.execSQL("drop table if  exists contents;");
-        db.execSQL(createCheckliststr);
-        db.execSQL(createPartsstr);
-        db.execSQL(createPositionsstr);
-        db.execSQL(crateProjectsstr);
-        db.execSQL(createContentsstr);
+        sqLiteDatabase.execSQL("drop table if  exists checklist;");
+        sqLiteDatabase.execSQL("drop table if  exists parts;");
+        sqLiteDatabase.execSQL("drop table if  exists positions;");
+        sqLiteDatabase.execSQL("drop table if  exists projects;");
+        sqLiteDatabase.execSQL("drop table if  exists contents;");
+        sqLiteDatabase.execSQL(createCheckliststr);
+        sqLiteDatabase.execSQL(createPartsstr);
+        sqLiteDatabase.execSQL(createPositionsstr);
+        sqLiteDatabase.execSQL(crateProjectsstr);
+        sqLiteDatabase.execSQL(createContentsstr);
 
     }
 
@@ -189,7 +189,9 @@ public class CheckDbHelper {
             }
         }
 
-
+        Message msg = Message.obtain();
+        msg.what = 1;
+        mhandler.sendMessage(msg);//发送消息停止动画
     }
 
 
@@ -203,7 +205,7 @@ public class CheckDbHelper {
 
         //执行SQL语句
         Log.e("EWayHttp", sql);
-        db.execSQL(sql);
+        sqLiteDatabase.execSQL(sql);
         return _id;
     }
 
@@ -216,7 +218,7 @@ public class CheckDbHelper {
                 ");";
         //执行SQL语句
         Log.e("EWayHttp", sql);
-        db.execSQL(sql);
+        sqLiteDatabase.execSQL(sql);
         return _id;
     }
 
@@ -229,7 +231,7 @@ public class CheckDbHelper {
                 ");";
         //执行SQL语句
         Log.e("EWayHttp", sql);
-        db.execSQL(sql);
+        sqLiteDatabase.execSQL(sql);
         return _id;
 
     }
@@ -243,7 +245,7 @@ public class CheckDbHelper {
                 ");";
         //执行SQL语句
         Log.e("EWayHttp", sql);
-        db.execSQL(sql);
+        sqLiteDatabase.execSQL(sql);
         return _id;
     }
 
@@ -261,7 +263,7 @@ public class CheckDbHelper {
                 ");";
         //执行SQL语句
         Log.e("EWayHttp", sql);
-        db.execSQL(sql);
+        sqLiteDatabase.execSQL(sql);
         return _id;
     }
 
@@ -284,7 +286,7 @@ public class CheckDbHelper {
     //根据checklist表数据
     public static void queryCheckList() {
         //查询获得游标
-        Cursor cursor = db.query("checklist", null, null, null, null, null, null);
+        Cursor cursor = sqLiteDatabase.query("checklist", null, null, null, null, null, null);
         //判断游标是否为空
         if (cursor.moveToFirst()) {
             //遍历游标

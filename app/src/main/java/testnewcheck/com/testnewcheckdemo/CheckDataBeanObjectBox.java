@@ -2,11 +2,13 @@ package testnewcheck.com.testnewcheckdemo;
 
 import java.util.List;
 
+import io.objectbox.annotation.Entity;
+import io.objectbox.annotation.Id;
+
 /**
  * Created by xiao on 2017/7/20.
  */
-
-public class CheckDataBean {
+public class CheckDataBeanObjectBox {
     private boolean optag;
     private String opmsg;
     private List<OpjsonBean> opjson;
@@ -35,7 +37,10 @@ public class CheckDataBean {
         this.opjson = opjson;
     }
 
+    @Entity
     public static class OpjsonBean {
+        @Id
+        private long id;
         private int ccnt;
         private String devicecode;
         private String deviceid;
@@ -163,7 +168,10 @@ public class CheckDataBean {
             this.parts = parts;
         }
 
+        @Entity
         public static class PartsBean {
+            @Id
+            private long id;
             private String devicecode;
             private String devicepartsmodel;
             private String devicepartsname;
@@ -210,7 +218,10 @@ public class CheckDataBean {
                 this.position = position;
             }
 
+            @Entity
             public static class PositionBean {
+                @Id
+                private long id;
                 private int ccnt;
                 private String checkpositionname;
                 private String devicemodel;
@@ -266,7 +277,10 @@ public class CheckDataBean {
                     this.project = project;
                 }
 
+                @Entity
                 public static class ProjectBean {
+                    @Id
+                    private long id;
                     private int ccnt;
                     private String checkprojectname;
                     private String projectid;
@@ -313,7 +327,10 @@ public class CheckDataBean {
                         this.record = record;
                     }
 
+                    @Entity
                     public static class ContentBean {
+                        @Id
+                        private long id;
                         private String checkcontentname;
                         private String checkdetailid;
                         private String checkid;
@@ -531,7 +548,10 @@ public class CheckDataBean {
                             this.riskdetailjson = riskdetailjson;
                         }
 
+                        @Entity
                         public static class RiskdetailjsonBean {
+                            @Id
+                            private long id;
                             private String negative;
                             private String positive;
                             private String ristname;
@@ -579,7 +599,7 @@ public class CheckDataBean {
                             }
                         }
 
-
+                        @Entity
                         public static class ContentPhotoBean {
 
 
@@ -590,7 +610,8 @@ public class CheckDataBean {
                              * photoid : 1495166122366155718
                              * photoname : CheckContent5054592199054851500601240812.jpg
                              */
-
+                            @Id
+                            private long id;
                             private String descstr;
                             private String dodate;
                             private String photofile;
@@ -641,7 +662,10 @@ public class CheckDataBean {
 
                     }
 
+                    @Entity
                     public static class RecordBean {
+                        @Id
+                        private long id;
                         private String checkid;
                         private String descstr;
                         private String devicecode;
@@ -769,6 +793,7 @@ public class CheckDataBean {
                             this.photo = photo;
                         }
 
+                        @Entity
                         public static class PhotoBean {
                             /**
                              * descstr :
@@ -777,7 +802,8 @@ public class CheckDataBean {
                              * photoid : 1499155390688854315
                              * photoname : CheckException14591733847857310571499155212675.jpg
                              */
-
+                            @Id
+                            private long id;
                             private String descstr;
                             private String dodate;
                             private String photofile;

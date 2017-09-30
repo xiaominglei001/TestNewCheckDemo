@@ -19,7 +19,7 @@ public class NetService {
     private static CallAdapter.Factory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create();
     private static Retrofit retrofit = new Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("http://:8088/")
+            .baseUrl("http://www.yiweiyun.net:8088/")
             .addConverterFactory(FastJsonConverterFactory.create())
             .addCallAdapterFactory(rxJavaCallAdapterFactory)
             .build();
@@ -27,8 +27,7 @@ public class NetService {
 
     //http://www.yiweiyun.net:8088/eway_server/check/getcheck?param={"ewaytoken":"990007181050581","loginid":"13255556666","checkid":"14988422700267509","devicetypeid":"","searchname":"","showcompanion":"1"}
 
-
-    //============登录==============
+    //==============
     public static ImsGetDataPartsAPI mImsGetDataPartsAPI;
     public static ImsGetDataPartsAPI getmImsGetDataPartsAPI() {
         if (mImsGetDataPartsAPI == null) {
