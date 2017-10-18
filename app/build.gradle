@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 // In your (app) module build.gradle file:
-apply plugin: 'com.android.application'
 apply plugin: 'io.objectbox'
 android {
     compileSdkVersion 25
@@ -41,7 +40,18 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+
     compile 'com.android.support:appcompat-v7:25.2.0'
+    // all below should be added automatically by the plugin
+
+    compile "io.objectbox:objectbox-android:1.1.0"
+    // some useful Kotlin extension functions
+    // compile "io.objectbox:objectbox-kotlin:$objectboxVersion"
+
+    annotationProcessor "io.objectbox:objectbox-processor:1.1.0"
+    // When using Kotlin use kapt instead:
+    // kapt "io.objectbox:objectbox-processor:$objectboxVersion"
+
 
     testCompile 'junit:junit:4.12'
 }
