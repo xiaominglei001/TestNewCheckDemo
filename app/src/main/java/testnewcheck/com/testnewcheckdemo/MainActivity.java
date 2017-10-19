@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CheckDbHelper.queryCheckList();
+                //CheckDbHelper.queryCheckList();
             }
         });
 
