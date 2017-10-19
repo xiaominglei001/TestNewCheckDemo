@@ -9,6 +9,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
 import testnewcheck.com.testnewcheckdemo.objectboxbean.CheckDataBeanObjectBox;
+import testnewcheck.com.testnewcheckdemo.serverbean.CheckServerJobBean;
 
 /**
  * Created by xiao on 2017/7/20.
@@ -59,7 +60,7 @@ public class NetService {
     //获取列表采用objectbox写入所用
     public interface ImsGetDataPartsBoxAPI {
         @POST("eway_server/check/getcheck")
-        Observable<CheckDataBeanObjectBox> getData(@Query("param") String param);
+        Observable<CheckServerJobBean> getData(@Query("param") String param);
 
     }
 

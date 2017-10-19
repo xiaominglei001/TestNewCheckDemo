@@ -36,5 +36,25 @@ public  class OpjsonBean {
     public ToOne<CheckDataBeanObjectBox> checkDataBeanObjectBox;
 
 
-
+    @Override
+    public String toString() {
+        return "OpjsonBean{" +
+                "id=" + id +
+                ", ccnt=" + ccnt +
+                ", devicecode='" + devicecode + '\'' +
+                ", deviceid='" + deviceid + '\'' +
+                ", devicelabel='" + devicelabel + '\'' +
+                ", devicemodel='" + devicemodel + '\'' +
+                ", devicename='" + devicename + '\'' +
+                ", devicetypeid='" + devicetypeid + '\'' +
+                ", devicetypename='" + devicetypename + '\'' +
+                ", idencode='" + idencode + '\'' +
+                ", pictureurl='" + pictureurl + '\'' +
+                ", placedate='" + placedate + '\'' +
+                ", producecode='" + producecode + '\'' +
+                ", recordflag='" + recordflag + '\'' +
+                ", parts=" + parts +
+                ", checkDataBeanObjectBox=" + checkDataBeanObjectBox +
+                '}';
+    }
 }
