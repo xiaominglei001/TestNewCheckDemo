@@ -27,6 +27,8 @@ import testnewcheck.com.testnewcheckdemo.serverbean.CheckServerJobBean;
 public class MainActivity extends AppCompatActivity {
 
     private BoxStore boxStore;
+    //所构建的需要插入的bean
+    private CheckDataBeanObjectBox box;
     private ProgressBar progressBar;
     private Handler mhandler = new Handler() {
         @Override
@@ -37,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, msg.obj + "", Toast.LENGTH_SHORT).show();
 
 
-                    CheckDataBeanObjectBox temp = boxStore.boxFor(CheckDataBeanObjectBox.class).get(Long.parseLong(msg.obj + ""));
+                    CheckDataBeanObjectBox temp = boxStore.boxFor(CheckDataBeanObjectBox.class).get(Long.parseLong(msg.obj + ""));//获取某个id值的对象
 
 
-                    Toast.makeText(MainActivity.this, temp.opjson.get(0).recordflag+ "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, temp.opjson.get(0).parts.get(0).partsid + "", Toast.LENGTH_SHORT).show();
 
                     break;
                 default:
@@ -83,16 +85,12 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    //拿到数据库
-    private Box<CheckDataBeanObjectBox> aboxdb;
-    //所构建的需要插入的bean
-    private CheckDataBeanObjectBox box;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         boxStore = ((MyApplication) getApplication()).boxStore;
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         Button bt1 = (Button) findViewById(R.id.button1);
@@ -107,11 +105,54 @@ public class MainActivity extends AppCompatActivity {
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //CheckDbHelper.queryCheckList();
+                //查询
+                Box<CheckDataBeanObjectBox> boxdb = boxStore.boxFor(CheckDataBeanObjectBox.class);
+                List<CheckDataBeanObjectBox> templist1 = boxdb.query().equal(CheckDataBeanObjectBox_.id, 1).build().find();
+                Toast.makeText(MainActivity.this, templist1.size() + "", Toast.LENGTH_SHORT).show();
+
+
+                Box<OpjsonBean> boxopjson = boxStore.boxFor(OpjsonBean.class);
+                List<OpjsonBean> templist2 = boxopjson.query().equal(OpjsonBean_.deviceid, "1490147248028397846").build().find();
+                Toast.makeText(MainActivity.this, templist2.size() + "", Toast.LENGTH_SHORT).show();
+
             }
         });
 
-        aboxdb = boxStore.boxFor(CheckDataBeanObjectBox.class);
+        Button bt3 = (Button) findViewById(R.id.button3);
+
+        bt3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //修改
+
+                Box<OpjsonBean> boxopjson = boxStore.boxFor(OpjsonBean.class);
+                List<OpjsonBean> templist2 = boxopjson.query().equal(OpjsonBean_.deviceid, "1490147248028397846").build().find();
+                Toast.makeText(MainActivity.this, templist2.size() + "", Toast.LENGTH_SHORT).show();
+
+                OpjsonBean tempedit = templist2.get(0);
+                tempedit.ccnt = 111112;
+                boxopjson.put(tempedit);
+                Toast.makeText(MainActivity.this, templist2.get(0).ccnt + "", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
+        Button bt4 = (Button) findViewById(R.id.button4);
+
+        bt4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Box<CheckDataBeanObjectBox> boxdb = boxStore.boxFor(CheckDataBeanObjectBox.class);
+                boxdb.remove(4);//id为标准删除
+                List<CheckDataBeanObjectBox> templist1 = boxdb.query().build().find();
+                Toast.makeText(MainActivity.this, "删除数据(如果有的话),删除后总数为---" + templist1.size(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "删除后最后一条数据的id为---" + templist1.get(templist1.size() - 1).id, Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
 
 
     }
@@ -153,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 if (checkDataBean.isOptag()) {
+                                    Box<CheckDataBeanObjectBox> boxdb = boxStore.boxFor(CheckDataBeanObjectBox.class);
                                     box = new CheckDataBeanObjectBox();
                                     box.optag = checkDataBean.isOptag();//拿到服务器返回数据,开始设置到需要插入的bean中
                                     box.opmsg = checkDataBean.getOpmsg();
@@ -213,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                                         box.opjson.add(tempob);
                                     }
 
-                                    long id = aboxdb.put(box);
+                                    long id = boxdb.put(box);
                                     Message msg = Message.obtain();
                                     msg.what = 1;
                                     msg.obj = id;

@@ -16,6 +16,18 @@
         android:layout_height="wrap_content"
         android:text="查询" />
 
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="修改" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="删除" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
