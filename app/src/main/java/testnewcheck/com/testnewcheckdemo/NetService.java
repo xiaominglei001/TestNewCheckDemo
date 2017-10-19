@@ -8,6 +8,7 @@ import retrofit2.converter.fastjson.FastJsonConverterFactory;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
+import testnewcheck.com.testnewcheckdemo.objectboxbean.CheckDataBeanObjectBox;
 
 /**
  * Created by xiao on 2017/7/20.
@@ -27,8 +28,9 @@ public class NetService {
 
     //http://www.yiweiyun.net:8088/eway_server/check/getcheck?param={"ewaytoken":"990007181050581","loginid":"13255556666","checkid":"14988422700267509","devicetypeid":"","searchname":"","showcompanion":"1"}
 
-    //==============
+    //=============================================
     public static ImsGetDataPartsAPI mImsGetDataPartsAPI;
+
     public static ImsGetDataPartsAPI getmImsGetDataPartsAPI() {
         if (mImsGetDataPartsAPI == null) {
             mImsGetDataPartsAPI = retrofit.create(ImsGetDataPartsAPI.class);
@@ -36,17 +38,30 @@ public class NetService {
         return mImsGetDataPartsAPI;
     }
 
-    //获取列表
+    //=============================================
+
+    public static ImsGetDataPartsBoxAPI mImsGetDataPartsBoxAPI;
+
+    public static ImsGetDataPartsBoxAPI getmImsGetDataPartsBoxAPI() {
+        if (mImsGetDataPartsBoxAPI == null) {
+            mImsGetDataPartsBoxAPI = retrofit.create(ImsGetDataPartsBoxAPI.class);
+        }
+        return mImsGetDataPartsBoxAPI;
+    }
+
+    //获取列表采用原生sql写入所用
     public interface ImsGetDataPartsAPI {
         @POST("eway_server/check/getcheck")
         Observable<CheckDataBean> getData(@Query("param") String param);
+
     }
 
+    //获取列表采用objectbox写入所用
+    public interface ImsGetDataPartsBoxAPI {
+        @POST("eway_server/check/getcheck")
+        Observable<CheckDataBeanObjectBox> getData(@Query("param") String param);
 
-
-
-
-
+    }
 
 
 }

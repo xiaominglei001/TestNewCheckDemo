@@ -14,9 +14,12 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import testnewcheck.com.testnewcheckdemo.objectboxbean.CheckDataBeanObjectBox;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +35,79 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+    };
+
+    private Observer observer1 = new Observer<CheckDataBean>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onNext(final CheckDataBean checkDataBean) {
+            if (checkDataBean != null) {
+                Toast.makeText(MainActivity.this, checkDataBean.getOpmsg(), Toast.LENGTH_SHORT).show();
+                new Thread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (checkDataBean.isOptag()) {
+                                    CheckDbHelper.crateDb(MainActivity.this, checkDataBean, "14935680020549608", mhandler);//成功写入以单号为db名的数据库中
+                                }
+                            }
+                        }
+
+                ).start();
+            }
+
+        }
+
+
+    };
+
+
+    private Observer observer2 = new Observer<CheckDataBeanObjectBox>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onNext(final CheckDataBeanObjectBox checkDataBean) {
+            if (checkDataBean != null) {
+                Toast.makeText(MainActivity.this, checkDataBean.opmsg, Toast.LENGTH_SHORT).show();
+                new Thread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (checkDataBean.optag) {
+                                    Box<CheckDataBeanObjectBox> abox = (((MyApplication) MainActivity.this.getApplication()).boxStore).boxFor(CheckDataBeanObjectBox.class);
+                                    abox.put(checkDataBean);
+
+                                    Message msg = Message.obtain();
+                                    msg.what = 1;
+                                    mhandler.sendMessage(msg);//发送消息停止动画
+
+                                }
+                            }
+                        }
+
+                ).start();
+            }
+
+        }
+
+
     };
 
     @Override
@@ -66,39 +142,11 @@ public class MainActivity extends AppCompatActivity {
         //http://www.yiweiyun.net:8080/eway_server/check/getcheck?param={"ewaytoken":"990007181050581","loginid":"13255556666","checkid":"14935680020549608","devicetypeid":"","searchname":"","showcompanion":"1"}
         // String param = "{\"ewaytoken\":\"866265037858513\",\"loginid\":\"13255556666\",\"checkid\":\"14935680020549608\",\"devicetypeid\":\"\",\"searchname\":\"\",\"showcompanion\":\"1\"}";
         String param = "{\"ewaytoken\":\"866265037858513\",\"loginid\":\"13255556666\",\"checkid\":\"15015194000332061\",\"devicetypeid\":\"\",\"searchname\":\"\",\"showcompanion\":\"1\"}";
-        NetService.getmImsGetDataPartsAPI().getData(param).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<CheckDataBean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNext(final CheckDataBean checkDataBean) {
-                if (checkDataBean != null) {
-                    Toast.makeText(MainActivity.this, checkDataBean.getOpmsg(), Toast.LENGTH_SHORT).show();
-                    new Thread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (checkDataBean.isOptag()) {
-                                        CheckDbHelper.crateDb(MainActivity.this, checkDataBean, "14935680020549608", mhandler);//成功写入以单号为db名的数据库中
-                                    }
-                                }
-                            }
-
-                    ).start();
-                }
-
-            }
-        });
+        param = "{\"ewaytoken\":\"866265037858513\",\"loginid\":\"13255556666\",\"checkid\":\"15015194090188248\",\"devicetypeid\":\"\",\"searchname\":\"\",\"showcompanion\":\"1\"}";
+        NetService.getmImsGetDataPartsAPI().getData(param).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer1);//原生sql方法
+        // NetService.getmImsGetDataPartsBoxAPI().getData(param).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer2);//objectbox方法
 
 
     }
-
-
 }
+
