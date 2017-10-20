@@ -37,12 +37,11 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     progressBar.setVisibility(View.GONE);//隐藏
                     Toast.makeText(MainActivity.this, msg.obj + "", Toast.LENGTH_SHORT).show();
-
-
                     CheckDataBeanObjectBox temp = boxStore.boxFor(CheckDataBeanObjectBox.class).get(Long.parseLong(msg.obj + ""));//获取某个id值的对象
-
-
                     Toast.makeText(MainActivity.this, temp.opjson.get(0).parts.get(0).partsid + "", Toast.LENGTH_SHORT).show();
+                    Box<CheckDataBeanObjectBox> boxdb = boxStore.boxFor(CheckDataBeanObjectBox.class);
+                    List<CheckDataBeanObjectBox> templist1 = boxdb.query().build().find();
+                    Toast.makeText(MainActivity.this, "插入后总数为---" + templist1.size(), Toast.LENGTH_SHORT).show();
 
                     break;
                 default:
